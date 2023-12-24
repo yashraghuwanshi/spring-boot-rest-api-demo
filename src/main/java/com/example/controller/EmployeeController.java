@@ -108,6 +108,12 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeDto);
     }
 
+    @GetMapping(value = "/v1/getByRole")
+    public ResponseEntity<List<EmployeeDto>> findByRole(@RequestParam String role) {
+        List<EmployeeDto> employeesDto = employeeService.findByRole(role);
+        return ResponseEntity.status(HttpStatus.OK).body(employeesDto);
+    }
+
     @DeleteMapping(value = "v1/softDelete/{id}")
     public ResponseEntity<Void> softDelete(@PathVariable Integer id) {
         employeeService.softDelete(id);

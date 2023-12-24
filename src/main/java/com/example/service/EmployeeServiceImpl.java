@@ -15,6 +15,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -176,5 +177,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void softDelete(Integer id) {
         employeeRepository.softDelete(id);
+    }
+
+    @Override
+    public List<EmployeeDto> findByRole(String role) {
+        List<Employee> employees = employeeRepository.findByRole(role);
+        return employees.stream()
+                .map(employee -> modelMapper.map(employee, EmployeeDto.class))
+                .collect(Collectors.toList());
     }
 }

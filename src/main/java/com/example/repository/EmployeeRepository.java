@@ -14,6 +14,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Employee findByEmail(String email);
 
+    List<Employee> findByRole(String role);
+
     @Query("SELECT e FROM Employee e WHERE e.isDeleted = false")
     List<Employee> findAllNonDeleted();
 

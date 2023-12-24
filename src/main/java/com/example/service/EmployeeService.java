@@ -28,5 +28,5 @@ public interface EmployeeService {
     List<EmployeeDto> findAllNonDeleted();
 
     void softDelete(Integer id);
-
+    List<EmployeeDto> findByRole(String role);
 }
