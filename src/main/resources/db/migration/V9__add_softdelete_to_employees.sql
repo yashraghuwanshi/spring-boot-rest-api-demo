@@ -1,0 +1,2 @@
+ALTER TABLE employees
+ADD COLUMN is_deleted BOOLEAN DEFAULT 0;

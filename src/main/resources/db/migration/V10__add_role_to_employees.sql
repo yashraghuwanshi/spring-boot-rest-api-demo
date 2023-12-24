@@ -1,0 +1,2 @@
+ALTER TABLE employees
+ADD COLUMN emp_role VARCHAR(10);
