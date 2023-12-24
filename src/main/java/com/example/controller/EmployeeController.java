@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import com.example.dto.EmployeeDto;
+import com.example.exception.ResourceNotFoundException;
 import com.example.service.EmployeeService;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +84,8 @@ public class EmployeeController {
 
     @PatchMapping(value = "/v1/updateByField/{id}")
     public ResponseEntity<EmployeeDto> updateByField(@PathVariable Integer id, @RequestBody Map<String, Object> fields) {
-        EmployeeDto employeeDto = employeeService.updateByField(id, fields);
-        return ResponseEntity.ok(employeeDto);
+            EmployeeDto updatedEmployee = employeeService.updateByField(id, fields);
+            return ResponseEntity.ok(updatedEmployee);
     }
 
     @DeleteMapping(value = "/v1/delete/{id}")
