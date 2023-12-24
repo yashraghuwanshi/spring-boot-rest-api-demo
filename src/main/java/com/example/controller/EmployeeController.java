@@ -8,6 +8,7 @@ import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,10 @@ import java.util.Map;
 public class EmployeeController {
 
     private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
-
     private final EmployeeService employeeService;
+
+    @Value("${spring.profiles.active}")
+    private String activeProfile;
 
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
@@ -31,7 +34,7 @@ public class EmployeeController {
     @GetMapping(value = "/hello")
     public ResponseEntity<String> hello() {
         logger.info("Hello endpoint accessed.");
-        String response = "Welcome to the Spring Boot REST API application";
+        String response = "Active profile: " + activeProfile + " ";
         return ResponseEntity.ok(response);
     }
 
@@ -84,8 +87,8 @@ public class EmployeeController {
 
     @PatchMapping(value = "/v1/updateByField/{id}")
     public ResponseEntity<EmployeeDto> updateByField(@PathVariable Integer id, @RequestBody Map<String, Object> fields) {
-            EmployeeDto updatedEmployee = employeeService.updateByField(id, fields);
-            return ResponseEntity.ok(updatedEmployee);
+        EmployeeDto updatedEmployee = employeeService.updateByField(id, fields);
+        return ResponseEntity.ok(updatedEmployee);
     }
 
     @DeleteMapping(value = "/v1/delete/{id}")
