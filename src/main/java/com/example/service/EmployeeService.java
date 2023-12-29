@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.EmployeeDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -28,5 +29,8 @@ public interface EmployeeService {
     List<EmployeeDto> findAllNonDeleted();
 
     void softDelete(Integer id);
+
     List<EmployeeDto> findByRole(String role);
+
+    Page<EmployeeDto> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection);
 }

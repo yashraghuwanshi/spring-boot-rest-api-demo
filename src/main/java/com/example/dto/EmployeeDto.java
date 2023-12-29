@@ -23,7 +23,7 @@ public class EmployeeDto {
     @Size(min = 2, message = "last name should have at least 2 characters")
     private String lastName;
 
-    @JsonIgnore
+    //We dont send this field in JSON payload, becuase this field will be auto-generated
     private String hireDate;
 
     //@NotBlank(message = "Mobile number is required")
@@ -50,6 +50,8 @@ public class EmployeeDto {
     @ValidRole
     private String role;
 
+    //Only gets ignored when retrieved from database
+    //We dont send this field in JSON payload, becuase this field has default value
     @JsonIgnore
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 }

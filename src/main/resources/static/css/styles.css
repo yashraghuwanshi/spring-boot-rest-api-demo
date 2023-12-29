@@ -1,0 +1,12 @@
+/* styles.css */
+table.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 2px solid #ddd;
+}
+
+table.custom-table th, table.custom-table td {
+    border: 2px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}

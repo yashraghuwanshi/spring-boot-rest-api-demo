@@ -1,0 +1,2 @@
+ALTER TABLE employees
+MODIFY COLUMN user_name VARCHAR(255);
