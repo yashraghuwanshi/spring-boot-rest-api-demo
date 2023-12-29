@@ -4,10 +4,7 @@ import com.example.dto.EmployeeDto;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.Employee;
 import com.example.repository.EmployeeRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.ValidationException;
-import jakarta.validation.Validator;
+import jakarta.validation.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -105,29 +102,28 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void validateFields(Object target, Map<String, Object> fields) {
+        try (ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
+            Validator validator = validatorFactory.getValidator();
+            for (Map.Entry<String, Object> entry : fields.entrySet()) {
+                String fieldName = entry.getKey();
+                Object fieldValue = entry.getValue();
 
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+                // Set the field value in the target object
+                Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+                if (field != null) {
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, target, fieldValue);
+                }
 
-        for (Map.Entry<String, Object> entry : fields.entrySet()) {
-            String fieldName = entry.getKey();
-            Object fieldValue = entry.getValue();
-
-            // Set the field value in the target object
-            Field field = ReflectionUtils.findField(target.getClass(), fieldName);
-            if (field != null) {
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, target, fieldValue);
-            }
-
-            // Validate the field value against the constraints
-            Set<ConstraintViolation<Object>> violations = validator.validateProperty(target, fieldName);
-            if (!violations.isEmpty()) {
-                // Handle validation errors as needed, e.g., throw an exception
-                throw new ValidationException("Validation error for field " + fieldName + ": " + violations.iterator().next().getMessage());
+                // Validate the field value against the constraints
+                Set<ConstraintViolation<Object>> violations = validator.validateProperty(target, fieldName);
+                if (!violations.isEmpty()) {
+                    // Handle validation errors as needed, e.g., throw an exception
+                    throw new ValidationException("Validation error for field " + fieldName + ": " + violations.iterator().next().getMessage());
+                }
             }
         }
     }
-
 
 //    @Override
 //    public EmployeeDto updateByField(Integer id, Map<String, Object> fields) {
