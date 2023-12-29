@@ -10,6 +10,10 @@ import jakarta.validation.ValidationException;
 import jakarta.validation.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -101,6 +105,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private void validateFields(Object target, Map<String, Object> fields) {
+
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
         for (Map.Entry<String, Object> entry : fields.entrySet()) {
@@ -185,5 +190,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employees.stream()
                 .map(employee -> modelMapper.map(employee, EmployeeDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<EmployeeDto> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        Page<Employee> page = this.employeeRepository.findAll(pageable);
+        return page.map(employee -> modelMapper.map(employee, EmployeeDto.class));
     }
 }
